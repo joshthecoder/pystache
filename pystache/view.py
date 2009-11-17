@@ -79,10 +79,18 @@ class View(object):
         if attr in self.context:
             return self.context[attr]
         elif hasattr(self, attr):
-            return getattr(self, attr)()
+            attr = getattr(self, attr)
+            try:
+                return getattr(self, attr)()
+            except:
+                # Attribue is not callable
+                return attr
         else:
             return default
 
     def render(self):
         template = self.load_template()
         return Template(template, self).render()
+
+    def __str__(self):
+        return self.render()
